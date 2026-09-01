@@ -1,0 +1,11 @@
+<mat-card [class]="customClass()">
+  <mat-card-header>
+    <mat-card-title>{{ title() }}</mat-card-title>
+    <mat-card-subtitle>{{ subtitle() }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div [class]="customClassNgContent()">
+      <ng-content></ng-content>
+    </div>
+  </mat-card-content>
+</mat-card>

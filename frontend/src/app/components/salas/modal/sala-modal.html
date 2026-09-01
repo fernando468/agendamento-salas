@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>{{ data?.id ? 'Editar sala' : 'Adicionar sala' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content>
+    <app-custom-input
+      name="nome"
+      label="Nome"
+      type="text"
+      [required]="true"
+      [minLength]="2"
+      [maxLength]="20"
+      [form]="form"
+    />
+
+    <app-custom-input
+      name="capacidade"
+      label="Capacidade"
+      type="numeric"
+      [required]="true"
+      [minLength]="1"
+      [maxLength]="3"
+      [form]="form"
+    />
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancelar()">Cancelar</button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+      {{ data?.id ? 'Salvar' : 'Adicionar' }}
+    </button>
+  </mat-dialog-actions>
+</form>

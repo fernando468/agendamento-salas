@@ -1,0 +1,20 @@
+.full-width {
+  width: 100%;
+  display: block;
+}
+
+.time-fields {
+  display: flex;
+  gap: 16px;
+}
+
+.time-fields mat-form-field {
+  flex: 1;
+}
+
+@media (max-width: 480px) {
+  .time-fields {
+    flex-direction: column;
+    gap: 0;
+  }
+}

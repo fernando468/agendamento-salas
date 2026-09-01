@@ -1,0 +1,92 @@
+<div class="container">
+  <div class="cards">
+    <app-custom-card subtitle="Totais de Reservas confirmadas até hoje">
+      <h1>{{ totaisReservas().totalConfirmada }}</h1>
+    </app-custom-card>
+    <app-custom-card subtitle="Totais de Reservas canceladas até hoje">
+      <h1>{{ totaisReservas().totalCancelada }}</h1>
+    </app-custom-card>
+  </div>
+  <div class="reservas">
+    <app-custom-card subtitle="Próximas reservas" style="overflow: auto">
+      <div class="card-header">
+        <button mat-flat-button color="primary" type="button" (click)="abrirModalReserva()">
+          <mat-icon>add</mat-icon>
+          Nova reserva
+        </button>
+      </div>
+      <div class="table-wrapper">
+        <table class="table" mat-table [dataSource]="dataSource()">
+          <ng-container matColumnDef="sala">
+            <th mat-header-cell *matHeaderCellDef>Sala</th>
+            <td mat-cell *matCellDef="let element">{{ element.sala.nome }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="data">
+            <th mat-header-cell *matHeaderCellDef>Data</th>
+            <td mat-cell *matCellDef="let element">{{ formatarData(element.data) }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="horario">
+            <th mat-header-cell *matHeaderCellDef>Horário</th>
+            <td mat-cell *matCellDef="let element">
+              {{ formatarHora(element.horaInicio) }} às {{ formatarHora(element.horaFim) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="motivo">
+            <th mat-header-cell *matHeaderCellDef>Motivo</th>
+            <td mat-cell *matCellDef="let element">{{ element.motivo }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let element">
+              <mat-chip-set>
+                <mat-chip
+                  [ngClass]="{
+                    confirmada: element.statusReserva?.toUpperCase() === 'CONFIRMADA',
+                    'nao-confirmada': element.statusReserva?.toUpperCase() !== 'CONFIRMADA',
+                  }"
+                  >{{ element.statusReserva }}</mat-chip
+                >
+              </mat-chip-set>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef>Ações</th>
+            <td mat-cell *matCellDef="let element">
+              @if (element.minhaReserva) {
+                <button
+                  mat-icon-button
+                  type="button"
+                  aria-label="Editar reserva"
+                  matTooltip="Editar reserva"
+                  disabled="{{ element.statusReserva?.toUpperCase() === 'CANCELADA' }}"
+                  (click)="abrirModalReserva(element)"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  type="button"
+                  aria-label="Cancelar reserva"
+                  matTooltip="Cancelar reserva"
+                  disabled="{{ element.statusReserva?.toUpperCase() === 'CANCELADA' }}"
+                  (click)="cancelarReserva(element)"
+                >
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+    </app-custom-card>
+  </div>
+</div>

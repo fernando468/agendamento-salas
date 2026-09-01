@@ -1,0 +1,44 @@
+.inicio-page h1 {
+  margin: 0 0 12px;
+  color: #111827;
+}
+
+.inicio-page p {
+  margin: 0;
+  color: #4b5563;
+  font-size: 1rem;
+}
+
+.img-inicio-calendario {
+  width: 180px;
+  height: auto;
+  object-fit: contain;
+}
+
+.box-reservas {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.reservas {
+  width: 50%;
+}
+
+.calendario {
+  width: 50%;
+  padding-top: 16px;
+}
+
+/* Tela pequena */
+@media (max-width: 1280px) {
+  .box-reservas {
+    flex-direction: column;
+  }
+
+  .reservas,
+  .calendario {
+    width: 100%;
+  }
+}

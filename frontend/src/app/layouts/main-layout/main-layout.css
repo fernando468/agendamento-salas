@@ -1,0 +1,12 @@
+.layout-shell {
+  display: flex;
+  align-items: stretch;
+  min-height: 100vh;
+  background: #f3f4f6;
+}
+
+.content-area {
+  flex: 1;
+  padding: 24px;
+  box-sizing: border-box;
+}

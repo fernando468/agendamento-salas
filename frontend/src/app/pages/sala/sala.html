@@ -1,0 +1,35 @@
+<div class="container">
+  <section class="box-page">
+    <div class="page-header">
+      <div>
+        <h1>Salas</h1>
+        <p>Bem-vindo à área de salas.</p>
+      </div>
+    </div>
+  </section>
+  <div style="width: 25%">
+    <button mat-flat-button color="primary" type="button" (click)="abrirModalSala()">
+      <mat-icon>add</mat-icon>
+      Adicionar sala
+    </button>
+  </div>
+  <div class="salas-grid">
+    @for (sala of salas(); track sala.id ?? sala.nome) {
+      <app-custom-card title="{{ sala.nome }}" subtitle="{{ sala.capacidade }} lugares">
+        <div class="card-actions">
+          <button mat-stroked-button color="primary" type="button" (click)="abrirModalSala(sala)">
+            <mat-icon>edit</mat-icon>
+            Editar
+          </button>
+
+          <button mat-stroked-button color="warn" type="button" (click)="removerSala(sala.id)">
+            <mat-icon>delete</mat-icon>
+            Excluir
+          </button>
+        </div>
+      </app-custom-card>
+    } @empty {
+      <p class="empty-state">Nenhuma sala cadastrada.</p>
+    }
+  </div>
+</div>

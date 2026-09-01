@@ -1,0 +1,38 @@
+<div class="auth-container">
+  <app-custom-card customClass="auth-card" title="Bem-vindo" subtitle="Faça login na sua conta">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <app-custom-input
+        name="email"
+        label="Email"
+        placeholder="Digite seu email"
+        formControlName="email"
+        type="email"
+        [form]="loginForm"
+        [required]="true"
+        [minLength]="emailMinLength"
+        [maxLength]="emailMaxLength"
+      ></app-custom-input>
+
+      <app-custom-input
+        name="senha"
+        label="Senha"
+        placeholder="Digite sua senha"
+        formControlName="senha"
+        [form]="loginForm"
+        [type]="ocultar() ? 'password' : 'text'"
+        [required]="true"
+        [endIcon]="ocultar() ? 'visibility_off' : 'visibility'"
+        (endIconAction)="clickEvent($event)"
+        [minLength]="senhaMinLength"
+        [maxLength]="senhaMaxLength"
+      ></app-custom-input>
+      <app-custom-button
+        [loading]="loading()"
+        labelLoading="Entrando..."
+        labelNotLoading="Entrar"
+      ></app-custom-button>
+
+      <div class="auth-link">Não tem conta? <a routerLink="/criar-conta">Cadastre-se aqui</a></div>
+    </form>
+  </app-custom-card>
+</div>

@@ -1,0 +1,23 @@
+<button
+  color="{{ color() }}"
+  type="submit"
+  matButton="filled"
+  [disabled]="loading()"
+  style="width: 100%"
+>
+  @if (loading()) {
+    <div style="display: flex; align-items: center; gap: 8px">
+      <mat-progress-spinner
+        progressIndicator
+        mode="indeterminate"
+        diameter="20"
+        aria-label="Loading"
+        tabindex=""
+      />
+      <span>{{ labelLoading() }}</span>
+    </div>
+  }
+  @if (!loading()) {
+    <span>{{ labelNotLoading() }}</span>
+  }
+</button>

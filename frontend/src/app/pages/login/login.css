@@ -1,0 +1,67 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100dvh;
+  padding: 32px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Roboto', sans-serif;
+  box-sizing: border-box;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+:host {
+  display: block;
+}
+
+:host app-custom-card {
+  width: min(100%, 460px);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 460px;
+}
+
+.auth-button:disabled {
+  opacity: 0.7;
+}
+
+.auth-link {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.auth-link a {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.auth-link a:hover {
+  color: #4338ca;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .auth-container {
+    padding: 20px 16px;
+  }
+
+  .auth-card {
+    max-width: 100%;
+  }
+
+  mat-card-title {
+    font-size: 24px;
+  }
+}

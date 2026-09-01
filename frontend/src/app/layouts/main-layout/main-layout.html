@@ -1,0 +1,7 @@
+<div class="layout-shell">
+  <app-sidebar [items]="menuItems" title="Menu" (logout)="logout()" />
+
+  <main class="content-area">
+    <router-outlet />
+  </main>
+</div>

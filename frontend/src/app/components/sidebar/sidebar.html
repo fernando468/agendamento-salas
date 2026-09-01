@@ -1,0 +1,31 @@
+<mat-sidenav-container class="sidebar-container" autosize>
+  <mat-sidenav class="sidebar" mode="side" opened disableClose>
+    <div class="sidebar-header">
+      <div>{{ title() }}</div>
+    </div>
+
+    <div class="sidebar-content">
+      <mat-nav-list class="sidebar-nav" aria-label="Menu principal">
+        @for (item of items(); track item.route) {
+          <a
+            mat-list-item
+            class="nav-item"
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+          >
+            <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+            <span matListItemTitle>{{ item.label }}</span>
+          </a>
+        }
+      </mat-nav-list>
+
+      <mat-nav-list class="sidebar-exit" aria-label="Sair do sistema">
+        <a mat-list-item class="nav-item logout-item" (click)="onLogout()">
+          <mat-icon matListItemIcon>logout</mat-icon>
+          <span matListItemTitle>Sair</span>
+        </a>
+      </mat-nav-list>
+    </div>
+  </mat-sidenav>
+</mat-sidenav-container>

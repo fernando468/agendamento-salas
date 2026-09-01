@@ -1,0 +1,22 @@
+<mat-form-field appearance="outline" style="width: 100%">
+  <mat-label>{{ label() }}</mat-label>
+  <input
+    matInput
+    [value]="value"
+    [disabled]="isDisabled"
+    [type]="type()"
+    [minlength]="minLength()"
+    [maxlength]="maxLength()"
+    [formControl]="control()"
+    (input)="onInput($event.target.value)"
+    (blur)="onBlur()"
+  />
+  @if (endIcon()) {
+    <button matIconButton matSuffix (click)="clickEvent($event)">
+      <mat-icon>{{ endIcon() }}</mat-icon>
+    </button>
+  }
+  @if (form().get(name())?.errors) {
+    <mat-error>{{ message() }}</mat-error>
+  }
+</mat-form-field>

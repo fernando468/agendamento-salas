@@ -1,0 +1,73 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.cards,
+.reservas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.cards > app-custom-card,
+.reservas > app-custom-card {
+  flex: 1 1 280px;
+  width: 100%;
+  max-width: 100%;
+  display: block;
+}
+
+.card-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  min-width: 720px;
+  background-color: #fff;
+}
+
+th,
+td {
+  border-bottom: none;
+}
+
+.confirmada {
+  background-color: green !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.nao-confirmada {
+  background-color: red !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.mat-mdc-chip {
+  color: white !important;
+}
+
+@media (max-width: 768px) {
+  .cards,
+  .reservas {
+    flex-direction: column;
+  }
+
+  .cards > app-custom-card,
+  .reservas > app-custom-card {
+    flex-basis: 100%;
+  }
+}
