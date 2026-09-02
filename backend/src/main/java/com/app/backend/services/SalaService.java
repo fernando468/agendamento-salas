@@ -3,6 +3,7 @@ package com.app.backend.services;
 import com.app.backend.dtos.requests.SalaRequestDTO;
 import com.app.backend.dtos.responses.SalaResponseDTO;
 import com.app.backend.entities.Sala;
+import com.app.backend.handler.NotFoundException;
 import com.app.backend.mappers.SalaMapper;
 import com.app.backend.repositories.SalaRepository;
 import jakarta.transaction.Transactional;
@@ -26,7 +27,7 @@ public class SalaService {
     }
 
     @Transactional
-    public SalaResponseDTO atualizarPorId(Long id, SalaRequestDTO salaRequestDTO) {
+    public SalaResponseDTO atualizarPorId(Long id, SalaRequestDTO salaRequestDTO) throws NotFoundException {
         Sala existingSala = findById(id);
         Sala sala = SalaMapper.updateEntityFromRequest(existingSala, salaRequestDTO);
         Sala updatedSala = salaRepository.save(sala);
@@ -38,18 +39,18 @@ public class SalaService {
         return SalaMapper.toResponseDTOList(salas);
     }
 
-    public SalaResponseDTO buscarPorId(Long id) {
+    public SalaResponseDTO buscarPorId(Long id) throws NotFoundException {
         Sala sala = findById(id);
         return SalaMapper.toResponseDTO(sala);
     }
 
-    public Sala findById(Long id) {
+    public Sala findById(Long id) throws NotFoundException {
         return salaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Sala não encontrada com o ID: " + id));
+                .orElseThrow(() -> new NotFoundException("Sala não encontrada com o ID: " + id));
     }
 
     @Transactional
-    public void deletarPorId(Long id) {
+    public void deletarPorId(Long id) throws NotFoundException {
         Sala sala = findById(id);
         if (sala.getListaReserva().isEmpty()) {
             salaRepository.delete(sala);

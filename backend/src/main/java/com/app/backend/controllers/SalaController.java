@@ -2,6 +2,7 @@ package com.app.backend.controllers;
 
 import com.app.backend.dtos.requests.SalaRequestDTO;
 import com.app.backend.dtos.responses.SalaResponseDTO;
+import com.app.backend.handler.NotFoundException;
 import com.app.backend.services.SalaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class SalaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SalaResponseDTO> atualizarPorId(@PathVariable Long id, @Valid @RequestBody SalaRequestDTO salaRequestDTO) {
+    public ResponseEntity<SalaResponseDTO> atualizarPorId(@PathVariable Long id, @Valid @RequestBody SalaRequestDTO salaRequestDTO) throws NotFoundException {
         return ResponseEntity.ok(this.salaService.atualizarPorId(id, salaRequestDTO));
     }
 
@@ -35,12 +36,12 @@ public class SalaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SalaResponseDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<SalaResponseDTO> buscarPorId(@PathVariable Long id) throws NotFoundException {
         return ResponseEntity.ok(this.salaService.buscarPorId(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarPorId(@PathVariable Long id) {
+    public ResponseEntity<Void> deletarPorId(@PathVariable Long id) throws NotFoundException {
         this.salaService.deletarPorId(id);
         return ResponseEntity.noContent().build();
     }

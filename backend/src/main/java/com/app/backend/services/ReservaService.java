@@ -7,6 +7,9 @@ import com.app.backend.entities.Reserva;
 import com.app.backend.entities.Sala;
 import com.app.backend.entities.Usuario;
 import com.app.backend.enums.StatusReserva;
+import com.app.backend.handler.ConflictException;
+import com.app.backend.handler.NotFoundException;
+import com.app.backend.handler.UnauthorizedException;
 import com.app.backend.mappers.ReservaMapper;
 import com.app.backend.repositories.ReservaRepository;
 import jakarta.transaction.Transactional;
@@ -30,7 +33,7 @@ public class ReservaService {
     }
 
     @Transactional
-    public ReservaResponseDTO criar(ReservaRequestDTO reservaRequestDTO) {
+    public ReservaResponseDTO criar(ReservaRequestDTO reservaRequestDTO) throws NotFoundException, UnauthorizedException, ConflictException {
         verificarSePermiteCriarReserva(reservaRequestDTO);
         Usuario usuarioLogado = authService.getUsuarioAutenticado();
         Sala sala = salaService.findById(reservaRequestDTO.salaId());
@@ -51,7 +54,7 @@ public class ReservaService {
     }
 
     @Transactional
-    public ReservaResponseDTO atualizarPorId(Long id, ReservaRequestDTO reservaRequestDTO) {
+    public ReservaResponseDTO atualizarPorId(Long id, ReservaRequestDTO reservaRequestDTO) throws NotFoundException, ConflictException, UnauthorizedException {
         verificarSePermiteAlterarReserva(reservaRequestDTO);
         Reserva reservaExistente = findById(id);
         Reserva reserva = ReservaMapper.updateEntityFromRequest(reservaExistente, reservaRequestDTO);
@@ -60,20 +63,20 @@ public class ReservaService {
         return ReservaMapper.toResponseDTO(reservaAtualizada, minhaReserva);
     }
 
-    private void verificarSePermiteCriarReserva(ReservaRequestDTO reservaRequestDTO) {
+    private void verificarSePermiteCriarReserva(ReservaRequestDTO reservaRequestDTO) throws ConflictException {
         Boolean permiteCriarReserva = isPermiteCriarReserva(reservaRequestDTO);
         if (permiteCriarReserva) {
             return;
         }
-        throw new RuntimeException("Não é possível criar a reserva. Já existe uma reserva para a mesma data e horário.");
+        throw new ConflictException("Não é possível criar a reserva. Já existe uma reserva para a mesma data e horário.");
     }
 
-    private void verificarSePermiteAlterarReserva(ReservaRequestDTO reservaRequestDTO) {
+    private void verificarSePermiteAlterarReserva(ReservaRequestDTO reservaRequestDTO) throws ConflictException {
         Boolean permiteAtualizarReserva = isPermiteAlterarReserva(reservaRequestDTO);
         if (permiteAtualizarReserva) {
             return;
         }
-        throw new RuntimeException("Não é possível atualizar a reserva. Já existe uma reserva para a mesma data e horário.");
+        throw new ConflictException("Não é possível atualizar a reserva. Já existe uma reserva para a mesma data e horário.");
     }
 
     public Boolean isPermiteAlterarReserva(ReservaRequestDTO reservaRequestDTO) {
@@ -85,24 +88,24 @@ public class ReservaService {
         return reserva.isEmpty() || reserva.get().getId().equals(reservaRequestDTO.salaId());
     }
 
-    private Reserva findById(Long id) {
+    private Reserva findById(Long id) throws NotFoundException {
         return reservaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reserva não encontrada com o ID: " + id));
+                .orElseThrow(() -> new NotFoundException("Reserva não encontrada com o ID: " + id));
     }
 
-    public ReservaResponseDTO buscarPorId(Long id) {
+    public ReservaResponseDTO buscarPorId(Long id) throws NotFoundException, UnauthorizedException {
         Reserva reserva = findById(id);
         Boolean minhaReserva = isMinhaReserva(reserva);
         return ReservaMapper.toResponseDTO(reserva, minhaReserva);
     }
 
-    public List<ReservaResponseDTO> buscarTodos() {
+    public List<ReservaResponseDTO> buscarTodos() throws UnauthorizedException {
         List<Reserva> reservas = reservaRepository.findAllByOrderByCriadoEmDesc();
         return ReservaMapper.toResponseDTOList(reservas, authService.getUsuarioAutenticado().getId());
     }
 
     @Transactional
-    public ReservaResponseDTO cancelarPorId(Long id) {
+    public ReservaResponseDTO cancelarPorId(Long id) throws NotFoundException, UnauthorizedException {
         Reserva reserva = findById(id);
         reserva.setAtivo(false);
         reserva.setStatus(StatusReserva.CANCELADA);
@@ -110,17 +113,17 @@ public class ReservaService {
         return ReservaMapper.toResponseDTO(reserva, isMinhaReserva(reserva));
     }
 
-    public Boolean isMinhaReserva(Reserva reserva) {
+    public Boolean isMinhaReserva(Reserva reserva) throws UnauthorizedException {
         return authService.getUsuarioAutenticado().getId().equals(reserva.getUsuario().getId());
     }
 
-    public List<ReservaResponseDTO> buscarTodasReservasDoUsuarioNoDia() {
+    public List<ReservaResponseDTO> buscarTodasReservasDoUsuarioNoDia() throws UnauthorizedException {
         Long usuarioId = authService.getUsuarioAutenticado().getId();
         List<Reserva> listaReserva = reservaRepository.buscarTodasReservasDoDiaPorUsuarioId(LocalDate.now(), usuarioId);
         return ReservaMapper.toResponseDTOList(listaReserva, usuarioId);
     }
 
-    public TotalAgrupadoResponseDTO calcularTotaisReservasDoUsuario() {
+    public TotalAgrupadoResponseDTO calcularTotaisReservasDoUsuario() throws UnauthorizedException {
         Long usuarioId = authService.getUsuarioAutenticado().getId();
 
         return reservaRepository.calcularTotalDeReservaPorUsuarioId(usuarioId);

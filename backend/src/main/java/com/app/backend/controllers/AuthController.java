@@ -4,6 +4,7 @@ import com.app.backend.dtos.requests.LoginRequestDTO;
 import com.app.backend.dtos.requests.UsuarioRequestDTO;
 import com.app.backend.dtos.responses.AuthResponseDTO;
 import com.app.backend.dtos.responses.UsuarioResponseDTO;
+import com.app.backend.handler.UnauthorizedException;
 import com.app.backend.services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -24,12 +25,12 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UsuarioResponseDTO> registrar(@Valid @RequestBody UsuarioRequestDTO request) {
+    public ResponseEntity<UsuarioResponseDTO> registrar(@Valid @RequestBody UsuarioRequestDTO request) throws UnauthorizedException {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.registrar(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
+    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) throws UnauthorizedException {
         return ResponseEntity.ok(authService.autenticar(request));
     }
 }

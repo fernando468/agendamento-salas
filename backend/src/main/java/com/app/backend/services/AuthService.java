@@ -5,6 +5,7 @@ import com.app.backend.dtos.requests.UsuarioRequestDTO;
 import com.app.backend.dtos.responses.AuthResponseDTO;
 import com.app.backend.dtos.responses.UsuarioResponseDTO;
 import com.app.backend.entities.Usuario;
+import com.app.backend.handler.UnauthorizedException;
 import com.app.backend.mappers.UsuarioMapper;
 import com.app.backend.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
@@ -36,18 +37,18 @@ public class AuthService {
     }
 
     @Transactional
-    public UsuarioResponseDTO registrar(UsuarioRequestDTO request) {
+    public UsuarioResponseDTO registrar(UsuarioRequestDTO request) throws UnauthorizedException {
 
         if (usuarioRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Não foi possível registrar o usuário.");
+            throw new UnauthorizedException("Não foi possível registrar o usuário.");
         }
 
         if (!request.senha().equals(request.repitaSenha())) {
-            throw new IllegalArgumentException("As senhas não coincidem.");
+            throw new UnauthorizedException("As senhas não coincidem.");
         }
 
         if (!request.email().equals(request.repitaEmail())) {
-            throw new IllegalArgumentException("Os emails não coincidem.");
+            throw new UnauthorizedException("Os emails não coincidem.");
         }
 
         Usuario usuario = UsuarioMapper.toEntity(request, passwordEncoder.encode(request.senha()));
@@ -57,30 +58,30 @@ public class AuthService {
         return UsuarioMapper.toResponseDTO(salvo);
     }
 
-    public AuthResponseDTO autenticar(LoginRequestDTO request) {
+    public AuthResponseDTO autenticar(LoginRequestDTO request) throws UnauthorizedException {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.senha())
         );
 
         Usuario usuario = (Usuario) authentication.getPrincipal();
         if (usuario == null) {
-            throw new IllegalArgumentException("Não foi possível autenticar o usuário.");
+            throw new UnauthorizedException("Não foi possível autenticar o usuário.");
         }
         String token = jwtService.gerarToken(usuario);
 
         return new AuthResponseDTO(token, "Bearer", usuario.getEmail(), usuario.getNome());
     }
 
-    public Usuario getUsuarioAutenticado() {
+    public Usuario getUsuarioAutenticado() throws UnauthorizedException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalArgumentException("Usuário não autenticado.");
+            throw new UnauthorizedException("Usuário não autenticado.");
         }
 
         Usuario usuario = (Usuario) authentication.getPrincipal();
 
         if (usuario == null) {
-            throw new IllegalArgumentException("Usuário não encontrado.");
+            throw new UnauthorizedException("Usuário não encontrado.");
         }
 
         return usuario;

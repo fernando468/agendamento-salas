@@ -3,6 +3,9 @@ package com.app.backend.controllers;
 import com.app.backend.dtos.requests.ReservaRequestDTO;
 import com.app.backend.dtos.responses.ReservaResponseDTO;
 import com.app.backend.dtos.responses.TotalAgrupadoResponseDTO;
+import com.app.backend.handler.ConflictException;
+import com.app.backend.handler.NotFoundException;
+import com.app.backend.handler.UnauthorizedException;
 import com.app.backend.services.ReservaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,40 +24,40 @@ public class ReservaController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservaResponseDTO> criar(@Valid @RequestBody ReservaRequestDTO reservaRequestDTO) {
+    public ResponseEntity<ReservaResponseDTO> criar(@Valid @RequestBody ReservaRequestDTO reservaRequestDTO) throws NotFoundException, ConflictException, UnauthorizedException {
         ReservaResponseDTO reservaResponseDTO = reservaService.criar(reservaRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(reservaResponseDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReservaResponseDTO> atualizarPorId(@PathVariable Long id, @Valid @RequestBody ReservaRequestDTO reservaRequestDTO) {
+    public ResponseEntity<ReservaResponseDTO> atualizarPorId(@PathVariable Long id, @Valid @RequestBody ReservaRequestDTO reservaRequestDTO) throws NotFoundException, ConflictException, UnauthorizedException {
         ReservaResponseDTO reservaResponseDTO = reservaService.atualizarPorId(id, reservaRequestDTO);
         return ResponseEntity.ok(reservaResponseDTO);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReservaResponseDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<ReservaResponseDTO> buscarPorId(@PathVariable Long id) throws NotFoundException, UnauthorizedException {
         ReservaResponseDTO reservaResponseDTO = reservaService.buscarPorId(id);
         return ResponseEntity.ok(reservaResponseDTO);
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservaResponseDTO>> buscarTodos() {
+    public ResponseEntity<List<ReservaResponseDTO>> buscarTodos() throws UnauthorizedException {
         return ResponseEntity.ok(reservaService.buscarTodos());
     }
 
     @GetMapping("/minhas-reservas")
-    public ResponseEntity<List<ReservaResponseDTO>> buscarTodasReservasDoUsuarioNoDia() {
+    public ResponseEntity<List<ReservaResponseDTO>> buscarTodasReservasDoUsuarioNoDia() throws UnauthorizedException {
         return ResponseEntity.ok(reservaService.buscarTodasReservasDoUsuarioNoDia());
     }
 
     @GetMapping("/totais-reservas")
-    public ResponseEntity<TotalAgrupadoResponseDTO> calcularTotaisReservasDoUsuario() {
+    public ResponseEntity<TotalAgrupadoResponseDTO> calcularTotaisReservasDoUsuario() throws UnauthorizedException {
         return ResponseEntity.ok(reservaService.calcularTotaisReservasDoUsuario());
     }
 
     @PutMapping("/cancelar/{id}")
-    public ResponseEntity<ReservaResponseDTO> cancelarPorId(@PathVariable Long id) {
+    public ResponseEntity<ReservaResponseDTO> cancelarPorId(@PathVariable Long id) throws NotFoundException, UnauthorizedException {
         return ResponseEntity.ok(reservaService.cancelarPorId(id));
     }
 }

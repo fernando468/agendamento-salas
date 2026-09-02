@@ -21,49 +21,6 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentException(
-            IllegalArgumentException ex,
-            HttpServletRequest request
-    ) {
-        return buildResponse(
-                HttpStatus.BAD_REQUEST,
-                "Bad Request",
-                ex.getMessage(),
-                request.getRequestURI(),
-                List.of()
-        );
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponseDTO> handleRuntimeException(
-            RuntimeException ex,
-            HttpServletRequest request
-    ) {
-        return buildResponse(
-                HttpStatus.BAD_REQUEST,
-                "Bad Request",
-                ex.getMessage(),
-                request.getRequestURI(),
-                List.of()
-        );
-    }
-
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ErrorResponseDTO> handleAuthenticationException(
-            AuthenticationException ex,
-            HttpServletRequest request
-    ) {
-        return buildResponse(
-                HttpStatus.UNAUTHORIZED,
-                "Unauthorized",
-                "Credenciais inválidas ou usuário não autenticado.",
-                request.getRequestURI(),
-                List.of()
-        );
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDTO> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex,
@@ -84,84 +41,7 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponseDTO> handleConstraintViolationException(
-            ConstraintViolationException ex,
-            HttpServletRequest request
-    ) {
-        List<String> details = ex.getConstraintViolations()
-                .stream()
-                .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
-                .toList();
-
-        return buildResponse(
-                HttpStatus.BAD_REQUEST,
-                "Validation failed",
-                "Parâmetros inválidos.",
-                request.getRequestURI(),
-                details
-        );
-    }
-
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ErrorResponseDTO> handleMethodArgumentTypeMismatchException(
-            MethodArgumentTypeMismatchException ex,
-            HttpServletRequest request
-    ) {
-        String detail = "Parâmetro '" + ex.getName() + "' deve ser do tipo " + ex.getRequiredType() + ".";
-
-        return buildResponse(
-                HttpStatus.BAD_REQUEST,
-                "Bad Request",
-                detail,
-                request.getRequestURI(),
-                List.of()
-        );
-    }
-
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<ErrorResponseDTO> handleMissingServletRequestParameterException(
-            MissingServletRequestParameterException ex,
-            HttpServletRequest request
-    ) {
-        return buildResponse(
-                HttpStatus.BAD_REQUEST,
-                "Bad Request",
-                "Parâmetro obrigatório ausente: " + ex.getParameterName(),
-                request.getRequestURI(),
-                List.of()
-        );
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponseDTO> handleHttpMessageNotReadableException(
-            HttpMessageNotReadableException ex,
-            HttpServletRequest request
-    ) {
-        return buildResponse(
-                HttpStatus.BAD_REQUEST,
-                "Bad Request",
-                "Corpo da requisição inválido ou mal formatado.",
-                request.getRequestURI(),
-                List.of()
-        );
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorResponseDTO> handleDataIntegrityViolationException(
-            DataIntegrityViolationException ex,
-            HttpServletRequest request
-    ) {
-        return buildResponse(
-                HttpStatus.CONFLICT,
-                "Conflict",
-                "Não foi possível concluir a operação por conflito de dados.",
-                request.getRequestURI(),
-                List.of()
-        );
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponseDTO> handleAccessDeniedException(
             AccessDeniedException ex,
             HttpServletRequest request
@@ -170,6 +50,48 @@ public class GlobalExceptionHandler {
                 HttpStatus.FORBIDDEN,
                 "Forbidden",
                 "Você não tem permissão para acessar este recurso.",
+                request.getRequestURI(),
+                List.of()
+        );
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponseDTO> handleUnauthorizedException(
+            UnauthorizedException ex,
+            HttpServletRequest request
+    ) {
+        return buildResponse(
+                HttpStatus.UNAUTHORIZED,
+                "Unauthorized",
+                ex.getMessage(),
+                request.getRequestURI(),
+                List.of()
+        );
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponseDTO> handleBadRequestException(
+            BadRequestException ex,
+            HttpServletRequest request
+    ) {
+        return buildResponse(
+                HttpStatus.BAD_REQUEST,
+                "Bad Request",
+                ex.getMessage(),
+                request.getRequestURI(),
+                List.of()
+        );
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponseDTO> handleNotFoundException(
+            NotFoundException ex,
+            HttpServletRequest request
+    ) {
+        return buildResponse(
+                HttpStatus.NOT_FOUND,
+                "Not Found",
+                ex.getMessage(),
                 request.getRequestURI(),
                 List.of()
         );
@@ -184,6 +106,20 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Internal Server Error",
                 "Ocorreu um erro inesperado.",
+                request.getRequestURI(),
+                List.of()
+        );
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ErrorResponseDTO> handleConflictException(
+            ConflictException ex,
+            HttpServletRequest request
+    ) {
+        return buildResponse(
+                HttpStatus.CONFLICT,
+                "Conflict",
+                ex.getMessage(),
                 request.getRequestURI(),
                 List.of()
         );
