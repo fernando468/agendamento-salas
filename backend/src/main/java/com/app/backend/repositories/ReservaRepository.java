@@ -29,6 +29,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
         FROM Reserva r
         WHERE r.data = :dataAtual
         AND r.usuario.id = :usuarioId
+        AND r.ativo = true
     """)
     List<Reserva> buscarTodasReservasDoDiaPorUsuarioId(LocalDate dataAtual, Long usuarioId);
 

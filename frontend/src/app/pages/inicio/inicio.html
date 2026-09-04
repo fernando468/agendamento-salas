@@ -7,7 +7,10 @@
 </section>
 <div class="box-reservas">
   <div class="reservas">
-    <app-reservas [totaisReservas]="totaisReservas()"></app-reservas>
+    <app-reservas
+      [totaisReservas]="totaisReservas()"
+      (reservasAlteradas)="atualizarReservas()"
+    ></app-reservas>
   </div>
 
   <div class="calendario">

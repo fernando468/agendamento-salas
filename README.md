@@ -4,7 +4,7 @@
 
 - Java JDK 25
 - Maven 3.9.9
-- Spring Boot 3.4.1
+- Spring Boot 4.1.0
 - Banco de dados PostgreSQL
 - Spring Validation
 

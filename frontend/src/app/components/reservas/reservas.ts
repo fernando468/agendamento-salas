@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -35,13 +35,12 @@ export class Reservas {
   totaisReservas = input.required<TotalAgrupadoResponse>();
   dataSource = signal<ReservaResponse[]>([]);
   snackBar = inject(MatSnackBar);
+  reservasAlteradas = output<void>();
 
   constructor(
     private reservaService: ReservaService,
     private dialog: MatDialog,
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.carregarReservas();
   }
 
@@ -49,26 +48,6 @@ export class Reservas {
     this.reservaService.buscarTodas().subscribe({
       next: (reservas) => this.dataSource.set(reservas),
       error: () => this.dataSource.set([]),
-    });
-  }
-
-  carregarMinhasReservas(): void {
-    this.reservaService.buscarMinhasReservas().subscribe({
-      next: (reservas) => this.dataSource.set(reservas),
-      error: () => this.dataSource.set([]),
-    });
-  }
-
-  carregarTotais() {
-    this.reservaService.buscarTotaisReservas().subscribe({
-      next: (total) => {
-        this.totaisReservas().totalConfirmada = total.totalConfirmada;
-        this.totaisReservas().totalCancelada = total.totalCancelada;
-      },
-      error: () => {
-        this.totaisReservas().totalConfirmada = 0;
-        this.totaisReservas().totalCancelada = 0;
-      },
     });
   }
 
@@ -122,8 +101,7 @@ export class Reservas {
             : 'Reserva criada com sucesso';
           this.snackBar.open(mensagem, 'X');
           this.carregarReservas();
-          this.carregarTotais();
-          this.carregarMinhasReservas();
+          this.reservasAlteradas.emit();
         },
         error: () => {
           const mensagem = reserva?.id ? 'Erro ao atualizar reserva' : 'Erro ao criada reserva';
@@ -143,7 +121,7 @@ export class Reservas {
       next: () => {
         this.snackBar.open('Reserva cancelada com sucesso', 'X');
         this.carregarReservas();
-        this.carregarTotais();
+        this.reservasAlteradas.emit();
       },
       error: () => {
         this.snackBar.open('Erro ao cancelar reserva', 'X');

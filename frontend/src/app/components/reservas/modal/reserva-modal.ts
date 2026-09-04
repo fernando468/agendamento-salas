@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, Inject, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,7 +32,7 @@ export type ReservaModalData = {
   templateUrl: './reserva-modal.html',
   styleUrl: './reserva-modal.css',
 })
-export class ReservaModalComponent implements OnInit {
+export class ReservaModalComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly salaService = inject(SalaService);
   private readonly dialogRef = inject(MatDialogRef<ReservaModalComponent>);
@@ -55,9 +55,7 @@ export class ReservaModalComponent implements OnInit {
     this.salaBusca = signal<string | SalaResponse | null>(data.sala);
     this.salasFiltradas = computed(() => this.filtrarSalas(this.salaBusca()));
     this.form.controls.sala.valueChanges.subscribe((valor) => this.salaBusca.set(valor));
-  }
 
-  ngOnInit(): void {
     this.salaService.buscarTodos().subscribe({
       next: (salas) => this.salas.set(salas),
       error: () => this.salas.set([]),

@@ -21,9 +21,7 @@ export class Sala {
   constructor(
     private salaService: SalaService,
     private dialog: MatDialog,
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.carregarSalas();
   }
 

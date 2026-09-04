@@ -36,6 +36,7 @@ export class Inicio {
 
   constructor(private reservaService: ReservaService) {
     this.buscarMinhasReservas();
+    this.buscarTotalReservas();
   }
 
   buscarTotalReservas(): void {
@@ -70,6 +71,11 @@ export class Inicio {
         this.events.set([]);
       },
     });
+  }
+
+  atualizarReservas(): void {
+    this.buscarTotalReservas();
+    this.buscarMinhasReservas();
   }
 
   criarDataHora(data: string, hora: string): Date {
