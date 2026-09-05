@@ -63,3 +63,36 @@ npm install
 ```bash
 ng serve
 ```
+
+# Executando o projeto com Docker
+
+Para executar os containers em segundo plano:
+
+```bash
+docker compose up --build -d
+```
+
+Após a inicialização, acesse:
+
+Frontend
+[http://localhost](http://localhost)
+Backend
+[http://localhost:8080/api](http://localhost:8080/api)
+
+PostgreSQL
+[localhost:5432](http://localhost:5432)
+
+- Login: postgres
+- Senha: postgres
+
+Subir o projeto
+
+```bash
+docker compose up -d
+```
+
+Subir reconstruindo as imagens
+
+```bash
+docker compose up --build
+```

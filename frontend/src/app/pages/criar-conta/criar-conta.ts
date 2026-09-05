@@ -74,7 +74,7 @@ export class CriarConta {
         ],
       ],
       email: [
-        'joao@gmail.com',
+        'joao@email.com',
         [
           Validators.required,
           Validators.email,
@@ -83,7 +83,7 @@ export class CriarConta {
         ],
       ],
       repitaEmail: [
-        'joao@gmail.com',
+        'joao@email.com',
         [
           Validators.required,
           Validators.email,
